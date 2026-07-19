@@ -1,0 +1,9 @@
+Django>=5.0,<5.1
+djangorestframework>=3.14.0
+mongoengine>=0.28.0
+pymongo>=4.6.0
+django-cors-headers>=4.3.0
+gunicorn>=21.2.0
+python-dotenv>=1.0.0
+django-mongoengine>=0.4.5
+reportlab>=4.0.0

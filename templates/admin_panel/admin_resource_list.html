@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}Resources - MentalMate Admin{% endblock %}
+{% block content %}
+
+<div class="d-flex align-items-center mb-4">
+  <a href="{% url 'admin-panel' %}" class="btn btn-outline-secondary btn-sm me-3">
+    <i class="bi bi-arrow-left"></i>
+  </a>
+  <h1 class="mb-0"><i class="bi bi-collection me-2 text-gradient"></i>Wellness Resources ({{ resources|length }})</h1>
+  <a href="/admin/wellness_library/resource/add/" class="btn btn-primary btn-sm ms-3">
+    <i class="bi bi-plus me-1"></i>Add Resource
+  </a>
+</div>
+
+<div class="card">
+  <div class="card-body p-0">
+    <div class="table-responsive">
+      <table class="table table-hover mb-0">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Category</th>
+            <th>Mood Range</th>
+            <th>Active</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for resource in resources %}
+          <tr>
+            <td>{{ resource.title }}</td>
+            <td><span class="badge text-bg-secondary">{{ resource.category }}</span></td>
+            <td>
+              {% if resource.mood_min or resource.mood_max %}
+                {{ resource.mood_min|default:"—" }} – {{ resource.mood_max|default:"—" }}
+              {% else %}
+                <span class="text-muted">Any</span>
+              {% endif %}
+            </td>
+            <td>
+              {% if resource.is_active %}
+                <span class="badge text-bg-success">Active</span>
+              {% else %}
+                <span class="badge text-bg-danger">Inactive</span>
+              {% endif %}
+            </td>
+            <td>
+              <a href="/admin/wellness_library/resource/{{ resource.pk }}/change/" class="btn btn-outline-secondary btn-sm">
+                <i class="bi bi-pencil"></i>
+              </a>
+            </td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="5" class="text-center text-muted py-4">No resources yet. <a href="/admin/wellness_library/resource/add/">Add one</a>.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

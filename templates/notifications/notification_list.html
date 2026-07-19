@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Notifications - MentalMate{% endblock %}
+{% block content %}
+
+<div class="d-flex align-items-center justify-content-between mb-4">
+  <h1 class="mb-0"><i class="bi bi-bell me-2 text-gradient"></i>Notifications</h1>
+  {% if notifications %}
+    <form method="post" action="{% url 'notifications-mark-all-read' %}">
+      {% csrf_token %}
+      <button class="btn btn-outline-secondary btn-sm" type="submit">
+        <i class="bi bi-check-all me-1"></i>Mark All Read
+      </button>
+    </form>
+  {% endif %}
+</div>
+
+{% if notifications %}
+  <div class="d-flex flex-column gap-3">
+    {% for notif in notifications %}
+    <div class="card {% if not notif.read %}border-primary{% endif %}" style="{% if not notif.read %}border-color: rgba(108,99,255,0.4) !important;{% endif %}">
+      <div class="card-body d-flex align-items-start gap-3">
+        <div class="mm-icon-circle flex-shrink-0">
+          {% if notif.notification_type == "streak" %}🔥
+          {% elif notif.notification_type == "reminder" %}👋
+          {% elif notif.notification_type == "report" %}📊
+          {% else %}💬
+          {% endif %}
+        </div>
+        <div class="flex-grow-1">
+          <p class="mb-1" style="{% if not notif.read %}color: var(--mm-text);{% endif %}">{{ notif.message }}</p>
+          <small class="text-muted">{{ notif.created_at|date:"N j, Y H:i" }}</small>
+        </div>
+        {% if not notif.read %}
+          <div class="flex-shrink-0">
+            <form method="post" action="{% url 'notification-mark-read' notif.pk %}">
+              {% csrf_token %}
+              <button class="btn btn-outline-secondary btn-sm" type="submit" title="Mark as read">
+                <i class="bi bi-check"></i>
+              </button>
+            </form>
+          </div>
+          <span class="notif-dot" style="position: relative; width: 8px; height: 8px; background: var(--mm-secondary); border-radius: 50%; flex-shrink: 0; margin-top: 4px;"></span>
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <div class="card text-center py-5">
+    <div class="card-body">
+      <div style="font-size: 3rem; margin-bottom: 1rem;">🔔</div>
+      <h4>No notifications</h4>
+      <p class="text-muted">You're all caught up! Notifications about streaks and reminders will appear here.</p>
+    </div>
+  </div>
+{% endif %}
+
+{% endblock %}

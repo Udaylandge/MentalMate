@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}Wellness Library - MentalMate{% endblock %}
+{% block content %}
+
+<div class="d-flex align-items-center mb-4">
+  <h1 class="mb-0"><i class="bi bi-collection me-2 text-gradient"></i>Wellness Library</h1>
+</div>
+
+<!-- Filters -->
+<div class="card mb-4">
+  <div class="card-body">
+    <form method="get" class="row g-2 align-items-end">
+      <div class="col-md-6">
+        <label class="form-label">Search</label>
+        <input type="text" name="q" class="form-control" placeholder="Search by title or description..." value="{{ keyword }}">
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">Category</label>
+        <select name="category" class="form-select">
+          <option value="">All Categories</option>
+          {% for value, label in categories %}
+            <option value="{{ value }}" {% if category == value %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-2 d-flex gap-2">
+        <button class="btn btn-primary w-100" type="submit"><i class="bi bi-search"></i></button>
+        {% if keyword or category %}
+          <a class="btn btn-outline-secondary" href="{% url 'wellness-list' %}"><i class="bi bi-x"></i></a>
+        {% endif %}
+      </div>
+    </form>
+  </div>
+</div>
+
+{% if resources %}
+  <div class="row g-4">
+    {% for resource in resources %}
+    <div class="col-md-6 col-lg-4">
+      <a href="{% url 'wellness-detail' resource.pk %}" class="card h-100 p-1 text-decoration-none" style="display: block;">
+        <div class="card-body">
+          {% if resource.image_url %}
+            <img src="{{ resource.image_url }}" alt="{{ resource.title }}" class="w-100 mb-3 rounded-3" style="height: 140px; object-fit: cover;">
+          {% else %}
+            <div class="w-100 mb-3 rounded-3 d-flex align-items-center justify-content-center"
+                 style="height: 80px; background: rgba(108,99,255,0.1);">
+              <span style="font-size: 2rem;">🌿</span>
+            </div>
+          {% endif %}
+          <span class="badge text-bg-secondary mb-2">{{ resource.category }}</span>
+          <h5 class="card-title text-decoration-none">{{ resource.title }}</h5>
+          <p class="card-text text-decoration-none">{{ resource.description|truncatechars:120 }}</p>
+          <span class="text-primary small fw-500 mt-2 d-inline-block">Read more →</span>
+        </div>
+      </a>
+    </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <div class="card text-center py-5">
+    <div class="card-body">
+      <div style="font-size: 3rem; margin-bottom: 1rem;">🌿</div>
+      <h4>No resources found</h4>
+      <p class="text-muted">
+        {% if keyword or category %}
+          Try a different search or category.
+          <a href="{% url 'wellness-list' %}">Clear filters</a>
+        {% else %}
+          Wellness resources will appear here once added by the admin.
+        {% endif %}
+      </p>
+    </div>
+  </div>
+{% endif %}
+
+{% endblock %}

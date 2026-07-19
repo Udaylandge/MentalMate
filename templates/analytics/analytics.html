@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% block title %}Analytics - MentalMate{% endblock %}
+
+{% block content %}
+  <h1 class="mb-4"><i class="bi bi-bar-chart-line me-2 text-gradient"></i>Analytics</h1>
+
+  <div class="row g-3 mb-4">
+    <div class="col-md-4">
+      <div class="card h-100 p-1">
+        <div class="card-body">
+          <p class="text-muted mb-1" style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em;">Weekly Average</p>
+          {% if weekly_avg %}
+            <div class="mm-stat-value text-gradient">{{ weekly_avg|floatformat:1 }}<span style="font-size: 1rem;">/10</span></div>
+          {% else %}
+            <div class="mm-stat-value" style="color: var(--mm-text-muted);">—</div>
+            <small class="text-muted">No entries this week</small>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card h-100 p-1">
+        <div class="card-body">
+          <p class="text-muted mb-1" style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em;">Monthly Average</p>
+          {% if monthly_avg %}
+            <div class="mm-stat-value text-gradient">{{ monthly_avg|floatformat:1 }}<span style="font-size: 1rem;">/10</span></div>
+          {% else %}
+            <div class="mm-stat-value" style="color: var(--mm-text-muted);">—</div>
+            <small class="text-muted">No entries this month</small>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card h-100 p-1">
+        <div class="card-body">
+          <p class="text-muted mb-1" style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em;">Trend</p>
+          <div class="mt-1">
+            {% if trend == "improving" %}
+              <span class="badge text-bg-success fs-6">⬆ Improving</span>
+            {% elif trend == "declining" %}
+              <span class="badge text-bg-danger fs-6">⬇ Declining</span>
+            {% else %}
+              <span class="badge text-bg-secondary fs-6">→ Stable</span>
+            {% endif %}
+          </div>
+          <p class="text-muted mt-2 mb-0" style="font-size: 0.85rem;">vs. prior week</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">Last 7 Days Mood Trend</h5>
+
+      {% if not has_chart_data %}
+        <p class="text-muted mb-0">Add mood entries to see your trend chart.</p>
+      {% else %}
+        <div style="max-width: 900px;">
+          <canvas id="moodChart" height="110"></canvas>
+        </div>
+      {% endif %}
+
+      <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+      <script>
+        (function () {
+          const labels = JSON.parse('{{ chart_labels_json|escapejs }}');
+          const data = JSON.parse('{{ chart_scores_json|escapejs }}');
+          const hasAny = data.some(v => v !== null && v !== undefined);
+          const canvasEl = document.getElementById('moodChart');
+          if (hasAny && canvasEl) {
+            const ctx = canvasEl.getContext('2d');
+            new Chart(ctx, {
+              type: 'line',
+              data: {
+                labels: labels,
+                datasets: [{
+                  label: 'Mood score',
+                  data: data,
+                  borderColor: 'rgba(108, 99, 255, 1)',
+                  backgroundColor: 'rgba(108, 99, 255, 0.15)',
+                  fill: true,
+                  spanGaps: false,
+                  tension: 0.3,
+                  pointBackgroundColor: 'rgba(108,99,255,0.9)',
+                  pointRadius: 5,
+                }]
+              },
+              options: {
+                responsive: true,
+                plugins: {
+                  legend: { display: false }
+                },
+                scales: {
+                  y: {
+                    beginAtZero: true,
+                    max: 10,
+                    ticks: { stepSize: 1 },
+                    grid: { color: 'rgba(0,0,0,0.05)' }
+                  },
+                  x: {
+                    grid: { color: 'rgba(0,0,0,0.05)' }
+                  }
+                }
+              }
+            });
+          }
+        })();
+      </script>
+    </div>
+  </div>
+{% endblock %}

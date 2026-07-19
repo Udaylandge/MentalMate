@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}Mood History - MentalMate{% endblock %}
+{% block content %}
+
+<div class="d-flex align-items-center justify-content-between mb-4">
+  <h1 class="mb-0"><i class="bi bi-clock-history me-2 text-gradient"></i>Mood History</h1>
+  <a class="btn btn-primary" href="{% url 'mood-new' %}">
+    <i class="bi bi-plus-circle me-1"></i>Log Mood
+  </a>
+</div>
+
+{% if entries %}
+  <div class="card">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Mood</th>
+              <th>Energy</th>
+              <th>Stress</th>
+              <th>Sleep</th>
+              <th>Notes</th>
+              <th class="text-end">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for entry in entries %}
+            <tr>
+              <td class="fw-500">{{ entry.entry_date }}</td>
+              <td>
+                <span class="fw-700" style="color: var(--mm-primary); font-size: 1.1rem;">{{ entry.mood_score }}</span>
+                <small class="text-muted">/10</small>
+              </td>
+              <td>{% if entry.energy %}{{ entry.energy }}/10{% else %}<span class="text-muted">—</span>{% endif %}</td>
+              <td>{% if entry.stress %}{{ entry.stress }}/10{% else %}<span class="text-muted">—</span>{% endif %}</td>
+              <td>{% if entry.sleep_hours %}{{ entry.sleep_hours }}h{% else %}<span class="text-muted">—</span>{% endif %}</td>
+              <td>
+                {% if entry.notes %}
+                  <span title="{{ entry.notes }}" style="cursor: help;">{{ entry.notes|truncatechars:30 }}</span>
+                {% else %}
+                  <span class="text-muted">—</span>
+                {% endif %}
+              </td>
+              <td class="text-end">
+                <a class="btn btn-outline-secondary btn-sm me-1" href="{% url 'mood-edit' entry.pk %}">
+                  <i class="bi bi-pencil"></i>
+                </a>
+                <a class="btn btn-sm" href="{% url 'mood-delete' entry.pk %}"
+                   style="background: rgba(239,68,68,0.1); color: #f87171; border: 1px solid rgba(239,68,68,0.3);">
+                  <i class="bi bi-trash"></i>
+                </a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+{% else %}
+  <div class="card text-center py-5">
+    <div class="card-body">
+      <div style="font-size: 3rem; margin-bottom: 1rem;">😊</div>
+      <h4>No mood entries yet</h4>
+      <p class="text-muted">Start tracking your mood daily to spot patterns.</p>
+      <a class="btn btn-primary" href="{% url 'mood-new' %}">Log Your First Mood</a>
+    </div>
+  </div>
+{% endif %}
+
+{% endblock %}

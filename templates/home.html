@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% block title %}Home - MentalMate{% endblock %}
+{% block content %}
+
+<!-- Hero Section -->
+<div class="text-center py-5 mb-5">
+  <div class="mb-4">
+    <span style="font-size: 3.5rem;">🧠</span>
+  </div>
+  <h1 class="display-4 fw-bold mb-3">
+    Your Mental Wellness
+    <span class="text-gradient">Companion</span>
+  </h1>
+  <p class="lead mb-4" style="color: var(--mm-text-muted); max-width: 600px; margin: 0 auto;">
+    Track your mood daily, journal your thoughts, spot patterns with analytics,
+    and get personalized wellness recommendations.
+  </p>
+  <div class="d-flex gap-3 justify-content-center flex-wrap mt-4">
+    {% if user.is_authenticated %}
+      <a class="btn btn-primary btn-lg px-4" href="{% url 'dashboard' %}">
+        <i class="bi bi-speedometer2 me-2"></i>Go to Dashboard
+      </a>
+      <a class="btn btn-outline-secondary btn-lg px-4" href="{% url 'mood-new' %}">
+        <i class="bi bi-plus-circle me-2"></i>Log Today's Mood
+      </a>
+    {% else %}
+      <a class="btn btn-primary btn-lg px-4" href="{% url 'register' %}">
+        <i class="bi bi-person-plus me-2"></i>Get Started Free
+      </a>
+      <a class="btn btn-outline-secondary btn-lg px-4" href="{% url 'login' %}">
+        <i class="bi bi-box-arrow-in-right me-2"></i>Sign In
+      </a>
+    {% endif %}
+  </div>
+</div>
+
+<!-- Features Grid -->
+<div class="row g-4 mb-5">
+  <div class="col-md-4">
+    <div class="card h-100 p-1">
+      <div class="card-body">
+        <div class="mm-icon-circle mb-3">😊</div>
+        <h5 class="card-title">Daily Mood Tracking</h5>
+        <p class="card-text">Log mood, energy, stress, and sleep every day. One entry per day keeps the data clean and meaningful.</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card h-100 p-1">
+      <div class="card-body">
+        <div class="mm-icon-circle mb-3">📓</div>
+        <h5 class="card-title">Private Journal</h5>
+        <p class="card-text">Write freely. Entries are sanitized server-side and keyword-searchable — your thoughts stay yours.</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card h-100 p-1">
+      <div class="card-body">
+        <div class="mm-icon-circle mb-3">📊</div>
+        <h5 class="card-title">Trend Analytics</h5>
+        <p class="card-text">See weekly and monthly mood trends with Chart.js visualizations. Know if you're improving, stable, or declining.</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card h-100 p-1">
+      <div class="card-body">
+        <div class="mm-icon-circle mb-3">💡</div>
+        <h5 class="card-title">Smart Recommendations</h5>
+        <p class="card-text">Rule-based wellness tips personalized to your current mood, stress, and sleep — no AI medical advice.</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card h-100 p-1">
+      <div class="card-body">
+        <div class="mm-icon-circle mb-3">📋</div>
+        <h5 class="card-title">Detailed Reports</h5>
+        <p class="card-text">Generate weekly and monthly reports. Export your data as CSV for personal records anytime.</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card h-100 p-1">
+      <div class="card-body">
+        <div class="mm-icon-circle mb-3">🔒</div>
+        <h5 class="card-title">Private & Secure</h5>
+        <p class="card-text">Your data belongs to you. No third-party sharing, server-side input sanitization, session-based auth.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="text-center py-3" style="color: var(--mm-text-muted); font-size: 0.875rem;">
+  <i class="bi bi-shield-check me-1"></i>
+  MentalMate is a self-tracking and wellness support tool. It is <strong>not</strong> a medical diagnosis system.
+</div>
+
+{% endblock %}

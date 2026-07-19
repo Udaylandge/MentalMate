@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Login - MentalMate{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-12 col-md-5 col-lg-4">
+
+    <div class="text-center mb-4">
+      <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🧠</div>
+      <h2 class="fw-700">Welcome back</h2>
+      <p class="text-muted">Log in to continue your wellness journey.</p>
+    </div>
+
+    {% if form.non_field_errors %}
+      <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+    {% endif %}
+
+    <div class="card">
+      <div class="card-body p-4">
+        <form method="post" novalidate>
+          {% csrf_token %}
+
+          <div class="mb-3">
+            <label class="form-label" for="id_email">Email</label>
+            <input type="email" name="email" id="id_email" class="form-control" placeholder="you@example.com"
+                   value="{{ form.email.value|default:'' }}" autocomplete="email">
+            {% if form.email.errors %}<div class="text-danger small mt-1">{{ form.email.errors }}</div>{% endif %}
+          </div>
+
+          <div class="mb-4">
+            <div class="d-flex justify-content-between">
+              <label class="form-label" for="id_password">Password</label>
+              <a href="{% url 'password_reset' %}" class="small text-decoration-none">Forgot password?</a>
+            </div>
+            <input type="password" name="password" id="id_password" class="form-control"
+                   placeholder="Your password" autocomplete="current-password">
+            {% if form.password.errors %}<div class="text-danger small mt-1">{{ form.password.errors }}</div>{% endif %}
+          </div>
+
+          <button class="btn btn-primary w-100" type="submit">
+            <i class="bi bi-box-arrow-in-right me-1"></i>Sign In
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <div class="text-center mt-3" style="color: var(--mm-text-muted);">
+      Don't have an account?
+      <a href="{% url 'register' %}" class="ms-1 fw-500">Create one free →</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

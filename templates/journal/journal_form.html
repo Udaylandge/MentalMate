@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}{% if mode == "edit" %}Edit Journal Entry{% else %}New Journal Entry{% endif %} - MentalMate{% endblock %}
+{% block content %}
+
+<div class="row justify-content-center">
+  <div class="col-12 col-md-9 col-lg-8">
+    <div class="d-flex align-items-center mb-4">
+      <a href="{% url 'journal-list' %}" class="btn btn-outline-secondary btn-sm me-3">
+        <i class="bi bi-arrow-left"></i>
+      </a>
+      <h1 class="mb-0">
+        {% if mode == "edit" %}Edit Entry{% else %}New Journal Entry{% endif %}
+      </h1>
+    </div>
+
+    {% if form.non_field_errors %}
+      <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+    {% endif %}
+
+    <div class="card">
+      <div class="card-body p-4">
+        <form method="post" novalidate>
+          {% csrf_token %}
+          <div class="mb-4">
+            <label class="form-label">
+              <i class="bi bi-pencil-fill me-1" style="color: var(--mm-primary);"></i>
+              Your thoughts
+            </label>
+            {{ form.text }}
+            <div class="d-flex justify-content-between mt-1">
+              {% if form.text.errors %}
+                <div class="text-danger small">{{ form.text.errors }}</div>
+              {% else %}
+                <div></div>
+              {% endif %}
+              <small class="text-muted">Max 5000 characters</small>
+            </div>
+          </div>
+          <div class="d-flex gap-2">
+            <button class="btn btn-primary" type="submit">
+              <i class="bi bi-check-lg me-1"></i>
+              {% if mode == "edit" %}Save Changes{% else %}Save Entry{% endif %}
+            </button>
+            <a class="btn btn-outline-secondary" href="{% url 'journal-list' %}">Cancel</a>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <p class="text-muted mt-3" style="font-size: 0.8rem;">
+      <i class="bi bi-shield-lock me-1"></i>
+      Entries are sanitized server-side. Never rendered as raw HTML.
+    </p>
+  </div>
+</div>
+
+{% endblock %}

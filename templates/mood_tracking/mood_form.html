@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block title %}Log Mood - MentalMate{% endblock %}
+{% block content %}
+
+<div class="row justify-content-center">
+  <div class="col-12 col-md-8 col-lg-6">
+    <div class="d-flex align-items-center mb-4">
+      <a href="{% url 'mood-list' %}" class="btn btn-outline-secondary btn-sm me-3">
+        <i class="bi bi-arrow-left"></i>
+      </a>
+      <h1 class="mb-0">
+        {% if mode == "edit" %}Edit Mood Entry{% else %}Log Today's Mood{% endif %}
+      </h1>
+    </div>
+
+    {% if form.non_field_errors %}
+      <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+    {% endif %}
+
+    <div class="card">
+      <div class="card-body p-4">
+        <form method="post" novalidate>
+          {% csrf_token %}
+
+          <div class="mb-3">
+            <label class="form-label">Date</label>
+            {{ form.entry_date }}
+            {% if form.entry_date.errors %}<div class="text-danger small mt-1">{{ form.entry_date.errors }}</div>{% endif %}
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label">
+              <i class="bi bi-emoji-smile me-1" style="color: var(--mm-primary);"></i>
+              Mood Score <span class="text-muted">(1-10)</span>
+            </label>
+            {{ form.mood_score }}
+            <div class="d-flex justify-content-between mt-1">
+              <small class="text-muted">😔 Low</small>
+              <small class="text-muted">😄 High</small>
+            </div>
+            {% if form.mood_score.errors %}<div class="text-danger small mt-1">{{ form.mood_score.errors }}</div>{% endif %}
+          </div>
+
+          <hr style="border-color: var(--mm-border);" class="my-4">
+          <p class="text-muted mb-3" style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em;">
+            <i class="bi bi-sliders me-1"></i> Optional details
+          </p>
+
+          <div class="row g-3 mb-3">
+            <div class="col-sm-4">
+              <label class="form-label"><i class="bi bi-lightning me-1"></i>Energy</label>
+              {{ form.energy }}
+              {% if form.energy.errors %}<div class="text-danger small mt-1">{{ form.energy.errors }}</div>{% endif %}
+            </div>
+            <div class="col-sm-4">
+              <label class="form-label"><i class="bi bi-thermometer-half me-1"></i>Stress</label>
+              {{ form.stress }}
+              {% if form.stress.errors %}<div class="text-danger small mt-1">{{ form.stress.errors }}</div>{% endif %}
+            </div>
+            <div class="col-sm-4">
+              <label class="form-label"><i class="bi bi-moon me-1"></i>Sleep Hours</label>
+              {{ form.sleep_hours }}
+              {% if form.sleep_hours.errors %}<div class="text-danger small mt-1">{{ form.sleep_hours.errors }}</div>{% endif %}
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label"><i class="bi bi-sticky me-1"></i>Notes</label>
+            {{ form.notes }}
+            {% if form.notes.errors %}<div class="text-danger small mt-1">{{ form.notes.errors }}</div>{% endif %}
+          </div>
+
+          <div class="d-grid">
+            <button class="btn btn-primary" type="submit">
+              <i class="bi bi-check-lg me-1"></i>
+              {% if mode == "edit" %}Update Entry{% else %}Save Mood{% endif %}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

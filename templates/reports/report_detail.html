@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% block title %}{{ data.report_type|title }} Report - MentalMate{% endblock %}
+{% block content %}
+
+<div class="d-flex align-items-center mb-4">
+  <a href="{% url 'report-list' %}" class="btn btn-outline-secondary btn-sm me-3">
+    <i class="bi bi-arrow-left"></i>
+  </a>
+  <h1 class="mb-0">{{ data.report_type|title }} Report</h1>
+</div>
+
+<p class="text-muted mb-4">
+  <i class="bi bi-calendar me-1"></i>
+  Period: <strong>{{ data.period_start }}</strong> to <strong>{{ data.period_end }}</strong>
+</p>
+
+<!-- Summary Stats -->
+<div class="row g-3 mb-5">
+  <div class="col-md-3">
+    <div class="card p-1 text-center">
+      <div class="card-body">
+        <div class="mm-stat-value text-gradient">{{ data.count }}</div>
+        <div class="text-muted">Entries</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card p-1 text-center">
+      <div class="card-body">
+        {% if data.average %}
+          <div class="mm-stat-value text-gradient">{{ data.average }}</div>
+        {% else %}
+          <div class="mm-stat-value" style="color: var(--mm-text-muted);">—</div>
+        {% endif %}
+        <div class="text-muted">Average Mood</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card p-1 text-center">
+      <div class="card-body">
+        {% if data.min_score %}
+          <div class="mm-stat-value text-gradient">{{ data.min_score }}</div>
+        {% else %}
+          <div class="mm-stat-value" style="color: var(--mm-text-muted);">—</div>
+        {% endif %}
+        <div class="text-muted">Lowest Mood</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card p-1 text-center">
+      <div class="card-body">
+        {% if data.max_score %}
+          <div class="mm-stat-value text-gradient">{{ data.max_score }}</div>
+        {% else %}
+          <div class="mm-stat-value" style="color: var(--mm-text-muted);">—</div>
+        {% endif %}
+        <div class="text-muted">Highest Mood</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Entry Table -->
+{% if data.entries %}
+  <div class="card mb-4">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Mood</th>
+              <th>Energy</th>
+              <th>Stress</th>
+              <th>Sleep</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for entry in data.entries %}
+            <tr>
+              <td>{{ entry.entry_date }}</td>
+              <td><strong class="text-gradient">{{ entry.mood_score }}/10</strong></td>
+              <td>{% if entry.energy %}{{ entry.energy }}/10{% else %}—{% endif %}</td>
+              <td>{% if entry.stress %}{{ entry.stress }}/10{% else %}—{% endif %}</td>
+              <td>{% if entry.sleep_hours %}{{ entry.sleep_hours }}h{% else %}—{% endif %}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+{% else %}
+  <div class="card text-center py-4 mb-4">
+    <div class="card-body text-muted">No mood entries for this period.</div>
+  </div>
+{% endif %}
+
+<!-- Export Button -->
+<div class="d-flex gap-2">
+  {% if data.report_type == "weekly" %}
+    <a class="btn btn-primary" href="{% url 'report-export-weekly' %}">
+      <i class="bi bi-download me-1"></i>Export CSV
+    </a>
+  {% else %}
+    <a class="btn btn-primary" href="{% url 'report-export-monthly' %}">
+      <i class="bi bi-download me-1"></i>Export CSV
+    </a>
+  {% endif %}
+  <a class="btn btn-outline-secondary" href="{% url 'report-list' %}">Back to Reports</a>
+</div>
+
+{% endblock %}

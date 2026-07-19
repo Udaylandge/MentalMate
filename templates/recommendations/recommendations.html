@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Wellness Tips - MentalMate{% endblock %}
+{% block content %}
+
+<div class="d-flex align-items-center mb-4">
+  <h1 class="mb-0"><i class="bi bi-lightbulb me-2 text-gradient"></i>Wellness Recommendations</h1>
+</div>
+
+{% if has_today_entry %}
+  <div class="alert alert-info mb-4">
+    <i class="bi bi-info-circle me-1"></i>
+    Based on today's mood score of <strong>{{ today_entry.mood_score }}/10</strong>
+    {% if today_entry.stress %}, stress <strong>{{ today_entry.stress }}/10</strong>{% endif %}
+    {% if today_entry.sleep_hours %}, and <strong>{{ today_entry.sleep_hours }}h</strong> sleep{% endif %}.
+  </div>
+{% else %}
+  <div class="alert mb-4" style="background: rgba(108,99,255,0.1); color: var(--mm-primary); border: 1px solid rgba(108,99,255,0.2);">
+    <i class="bi bi-emoji-smile me-1"></i>
+    Log today's mood for personalized recommendations.
+    <a href="{% url 'mood-new' %}" class="ms-2 fw-600">Log Now →</a>
+  </div>
+{% endif %}
+
+<div class="row g-4">
+  {% for rec in recommendations %}
+  <div class="col-md-6 col-lg-4">
+    <div class="card h-100 p-1">
+      <div class="card-body">
+        <div class="d-flex align-items-start gap-3 mb-2">
+          <div class="mm-icon-circle">{{ rec.icon }}</div>
+          <div>
+            <h5 class="card-title mb-1">{{ rec.title }}</h5>
+            <span class="badge text-bg-secondary" style="font-size: 0.7rem;">{{ rec.category }}</span>
+          </div>
+        </div>
+        <p class="card-text">{{ rec.description }}</p>
+      </div>
+    </div>
+  </div>
+  {% empty %}
+  <div class="col-12">
+    <div class="card text-center py-5">
+      <div class="card-body">
+        <div style="font-size: 3rem; margin-bottom: 1rem;">🌟</div>
+        <h4>You're doing great!</h4>
+        <p class="text-muted">No specific recommendations right now. Keep logging your mood!</p>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+{% endblock %}

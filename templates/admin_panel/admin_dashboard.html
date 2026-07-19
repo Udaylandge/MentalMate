@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard - MentalMate{% endblock %}
+{% block content %}
+
+<div class="d-flex align-items-center justify-content-between mb-4">
+  <h1 class="mb-0"><i class="bi bi-shield-check me-2 text-gradient"></i>Admin Dashboard</h1>
+  <span class="badge text-bg-secondary">Staff Only</span>
+</div>
+
+<div class="row g-4 mb-5">
+  <div class="col-md-4">
+    <div class="card p-1 text-center">
+      <div class="card-body">
+        <div class="mm-stat-value text-gradient">{{ total_users }}</div>
+        <div class="text-muted">Total Users</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card p-1 text-center">
+      <div class="card-body">
+        <div class="mm-stat-value text-gradient">{{ total_mood_entries }}</div>
+        <div class="text-muted">Mood Entries</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card p-1 text-center">
+      <div class="card-body">
+        <div class="mm-stat-value text-gradient">{{ total_resources }}</div>
+        <div class="text-muted">Wellness Resources</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Admin Quick Links -->
+<div class="row g-3 mb-5">
+  <div class="col-md-4">
+    <a href="{% url 'admin-panel-users' %}" class="card text-decoration-none" style="display: block;">
+      <div class="card-body d-flex align-items-center gap-3">
+        <div class="mm-icon-circle">👥</div>
+        <div>
+          <div style="color: var(--mm-text); font-weight: 600;">User Management</div>
+          <small class="text-muted">View all users</small>
+        </div>
+        <i class="bi bi-chevron-right ms-auto" style="color: var(--mm-primary);"></i>
+      </div>
+    </a>
+  </div>
+  <div class="col-md-4">
+    <a href="{% url 'admin-panel-resources' %}" class="card text-decoration-none" style="display: block;">
+      <div class="card-body d-flex align-items-center gap-3">
+        <div class="mm-icon-circle">📚</div>
+        <div>
+          <div style="color: var(--mm-text); font-weight: 600;">Resources</div>
+          <small class="text-muted">Wellness library</small>
+        </div>
+        <i class="bi bi-chevron-right ms-auto" style="color: var(--mm-primary);"></i>
+      </div>
+    </a>
+  </div>
+  <div class="col-md-4">
+    <a href="/admin/" class="card text-decoration-none" style="display: block;">
+      <div class="card-body d-flex align-items-center gap-3">
+        <div class="mm-icon-circle">⚙️</div>
+        <div>
+          <div style="color: var(--mm-text); font-weight: 600;">Django Admin</div>
+          <small class="text-muted">Full data management</small>
+        </div>
+        <i class="bi bi-chevron-right ms-auto" style="color: var(--mm-primary);"></i>
+      </div>
+    </a>
+  </div>
+</div>
+
+<!-- Recent Users -->
+<h4 class="mb-3">Recent Users</h4>
+<div class="card">
+  <div class="card-body p-0">
+    <div class="table-responsive">
+      <table class="table table-hover mb-0">
+        <thead>
+          <tr>
+            <th>Email</th>
+            <th>Joined</th>
+            <th>Active</th>
+            <th>Staff</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for user in recent_users %}
+          <tr>
+            <td>{{ user.email }}</td>
+            <td class="text-muted">{{ user.date_joined|date:"N j, Y" }}</td>
+            <td>
+              {% if user.is_active %}
+                <span class="badge text-bg-success">Active</span>
+              {% else %}
+                <span class="badge text-bg-danger">Inactive</span>
+              {% endif %}
+            </td>
+            <td>
+              {% if user.is_staff %}
+                <span class="badge text-bg-secondary">Staff</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="4" class="text-center text-muted py-3">No users yet</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block title %}Your Profile - MentalMate{% endblock %}
+{% block content %}
+
+<div class="row justify-content-center">
+  <div class="col-12 col-md-7 col-lg-6">
+    <h1 class="mb-4"><i class="bi bi-person-circle me-2 text-gradient"></i>Your Profile</h1>
+
+    <div class="card mb-4">
+      <div class="card-body">
+        <div class="d-flex align-items-center gap-4 mb-4">
+          <div class="rounded-circle d-flex align-items-center justify-content-center fw-700"
+               style="width: 80px; height: 80px; background: linear-gradient(135deg, #6c63ff, #ff6b9d); color: white; font-size: 2rem;">
+            {{ user.email|first|upper }}
+          </div>
+          <div>
+            <h4 class="mb-1">{{ user.email }}</h4>
+            <small class="text-muted">
+              Joined {{ user.date_joined|date:"N j, Y" }}
+              {% if user.is_staff %}
+                &middot; <span class="badge text-bg-secondary">Staff</span>
+              {% endif %}
+            </small>
+          </div>
+        </div>
+
+        <hr style="border-color: var(--mm-border);">
+
+        <div class="row g-3">
+          <div class="col-sm-6">
+            <small class="text-muted d-block">Last login</small>
+            <span>{{ user.last_login|date:"N j, Y H:i"|default:"Never" }}</span>
+          </div>
+          <div class="col-sm-6">
+            <small class="text-muted d-block">Account status</small>
+            {% if user.is_active %}
+              <span class="badge text-bg-success">Active</span>
+            {% else %}
+              <span class="badge text-bg-danger">Inactive</span>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row g-3">
+      <div class="col-sm-6">
+        <a href="{% url 'dashboard' %}" class="card text-decoration-none h-100" style="display: block;">
+          <div class="card-body d-flex align-items-center gap-2">
+            <i class="bi bi-speedometer2" style="color: var(--mm-primary); font-size: 1.2rem;"></i>
+            <span style="color: var(--mm-text);">Dashboard</span>
+          </div>
+        </a>
+      </div>
+      <div class="col-sm-6">
+        <a href="{% url 'report-list' %}" class="card text-decoration-none h-100" style="display: block;">
+          <div class="card-body d-flex align-items-center gap-2">
+            <i class="bi bi-file-earmark-text" style="color: var(--mm-primary); font-size: 1.2rem;"></i>
+            <span style="color: var(--mm-text);">My Reports</span>
+          </div>
+        </a>
+      </div>
+      {% if user.is_staff %}
+      <div class="col-sm-6">
+        <a href="{% url 'admin-panel' %}" class="card text-decoration-none h-100" style="display: block;">
+          <div class="card-body d-flex align-items-center gap-2">
+            <i class="bi bi-shield-check" style="color: var(--mm-secondary); font-size: 1.2rem;"></i>
+            <span style="color: var(--mm-text);">Admin Panel</span>
+          </div>
+        </a>
+      </div>
+      {% endif %}
+      <div class="col-sm-6">
+        <a href="{% url 'logout' %}" class="card text-decoration-none h-100" style="display: block;">
+          <div class="card-body d-flex align-items-center gap-2">
+            <i class="bi bi-box-arrow-right" style="color: #f87171; font-size: 1.2rem;"></i>
+            <span style="color: #f87171;">Sign Out</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
